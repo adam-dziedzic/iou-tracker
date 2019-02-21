@@ -11,8 +11,9 @@ import csv
 
 def load_mot(detections):
     """
-    Loads detections stored in a mot-challenge like formatted CSV or numpy array (fieldNames = ['frame', 'id', 'x', 'y',
-    'w', 'h', 'score']).
+    Loads detections stored in a mot-challenge like formatted CSV or numpy array
+    (fieldNames = ['frame', 'id', 'x', 'y', 'w', 'h', 'score', 'class',
+    'visibility_ratio']).
 
     Args:
         detections
@@ -26,18 +27,21 @@ def load_mot(detections):
         raw = np.genfromtxt(detections, delimiter=',', dtype=np.float32)
     else:
         # assume it is an array
-        assert isinstance(detections, np.ndarray), "only numpy arrays or *.csv paths are supported as detections."
+        assert isinstance(detections,
+                          np.ndarray), "only numpy arrays or *.csv paths are supported as detections."
         raw = detections.astype(np.float32)
 
     end_frame = int(np.max(raw[:, 0]))
-    for i in range(1, end_frame+1):
+    for i in range(1, end_frame + 1):
         idx = raw[:, 0] == i
         bbox = raw[idx, 2:6]
         bbox[:, 2:4] += bbox[:, 0:2]  # x1, y1, w, h -> x1, y1, x2, y2
         scores = raw[idx, 6]
+        labels = raw[idx, 7]  # extract column 7 for the indexes (idx) from raw
         dets = []
-        for bb, s in zip(bbox, scores):
-            dets.append({'bbox': (bb[0], bb[1], bb[2], bb[3]), 'score': s})
+        for bb, s, label in zip(bbox, scores, labels):
+            dets.append({'bbox': (bb[0], bb[1], bb[2], bb[3]), 'score': s,
+                         'label': label})
         data.append(dets)
 
     return data
@@ -52,8 +56,9 @@ def save_to_csv(out_path, tracks):
         tracks (list): list of tracks to store.
     """
 
-    with open(out_path, "w") as ofile:
-        field_names = ['frame', 'id', 'x', 'y', 'w', 'h', 'score', 'wx', 'wy', 'wz']
+    with open(out_path, "w", newline="") as ofile:
+        field_names = ['frame', 'id', 'x', 'y', 'w', 'h', 'score', 'wx', 'wy',
+                       'wz']
 
         odict = csv.DictWriter(ofile, field_names)
         id_ = 1

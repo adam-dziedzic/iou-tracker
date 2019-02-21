@@ -28,24 +28,29 @@ def main(args):
             detections = load_mot(det_path)
 
             start = time()
-            tracks = track_iou(detections, args.sigma_l, args.sigma_h, args.sigma_iou, args.t_min)
+            tracks = track_iou(detections, args.sigma_l, args.sigma_h,
+                               args.sigma_iou, args.t_min)
             end = time()
 
             num_frames = len(detections)
-            print("finished " + seq + " at " + str(int(num_frames / (end - start))) + " fps!")
+            print("finished " + seq + " at " + str(
+                int(num_frames / (end - start))) + " fps!")
 
             save_to_csv(out_path, tracks)
 
 
 if __name__ == '__main__':
-
-    parser = argparse.ArgumentParser(description="IOU Tracker MOT demo script. Default parameters are set to reproduce "
-                                                 "the results using the SDP detections.")
-    parser.add_argument('-m', '--seqmap', type=str, required=True,
+    parser = argparse.ArgumentParser(
+        description="IOU Tracker MOT demo script. Default parameters are set to "
+                    "reproduce the results using the SDP detections.")
+    parser.add_argument('-m', '--seqmap', type=str,
+                        default="../motchallenge/seqmaps/c5-train.txt",
                         help="full path to the seqmap file to evaluate")
-    parser.add_argument('-o', '--res_dir', type=str, required=True,
+    parser.add_argument('-o', '--res_dir', type=str,
+                        default="../motchallenge/res/MOT16/iou-tracker",
                         help="path to the results directory")
-    parser.add_argument('-b', '--benchmark_dir', type=str, required=True,
+    parser.add_argument('-b', '--benchmark_dir', type=str,
+                        default="../motchallenge/MOT16/train",
                         help="path to the sequence directory")
     parser.add_argument('-sl', '--sigma_l', type=float, default=0.3,
                         help="low detection threshold")

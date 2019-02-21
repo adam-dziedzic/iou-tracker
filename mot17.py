@@ -38,10 +38,13 @@ def main(args):
                 sigma_iou = 0.2
                 t_min = 2
             else:
-                print("No detector name found, this could happen with the wrong seqmap seqmap file. "
-                      "Please use c10-train.txt, c10-test.txt or c10-all.txt")
+                print(
+                    "No detector name found, this could happen with the "
+                    "wrong seqmap seqmap file. "
+                    "Please use c10-train.txt, c10-test.txt or c10-all.txt")
                 exit()
 
+            # Take the pre-computed detections.
             det_path = args.benchmark_dir + "/" + seq + "/det/det.txt"
             out_path = args.res_dir + "/" + seq + ".txt"
 
@@ -52,19 +55,24 @@ def main(args):
             end = time()
 
             num_frames = len(detections)
-            print("finished " + seq + " at " + str(int(num_frames / (end - start))) + " fps!")
+            print("finished " + seq + " at " + str(
+                int(num_frames / (end - start))) + " fps!")
 
             save_to_csv(out_path, tracks)
 
-if __name__ == '__main__':
 
-    parser = argparse.ArgumentParser(description="IOU Tracker MOT17 demo script. The best parameters for each detector "
-                                     "are hardcoded.")
-    parser.add_argument('-m', '--seqmap', type=str, required=True,
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(
+        description="IOU Tracker MOT17 demo script. The best parameters for "
+                    "each detector are hardcoded.")
+    parser.add_argument('-m', '--seqmap', type=str,
+                        default="../motchallenge/seqmaps/c10-train-sample.txt",
                         help="full path to the seqmap file to evaluate")
-    parser.add_argument('-o', '--res_dir', type=str, required=True,
+    parser.add_argument('-o', '--res_dir', type=str,
+                        default="../motchallenge/res/MOT17/iou-tracker",
                         help="path to the results directory")
-    parser.add_argument('-b', '--benchmark_dir', type=str, required=True,
+    parser.add_argument('-b', '--benchmark_dir', type=str,
+                        default="../motchallenge/",
                         help="path to the sequence directory")
 
     args = parser.parse_args()

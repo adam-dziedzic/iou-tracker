@@ -18,7 +18,8 @@ def main(args):
     detections = load_mot(args.detection_path)
 
     start = time()
-    tracks = track_iou(detections, args.sigma_l, args.sigma_h, args.sigma_iou, args.t_min)
+    tracks = track_iou(detections, args.sigma_l, args.sigma_h, args.sigma_iou,
+                       args.t_min)
     end = time()
 
     num_frames = len(detections)
@@ -28,12 +29,12 @@ def main(args):
 
 
 if __name__ == '__main__':
-
     parser = argparse.ArgumentParser(description="IOU Tracker demo script")
     parser.add_argument('-d', '--detection_path', type=str, required=True,
                         help="full path to CSV file containing the detections")
     parser.add_argument('-o', '--output_path', type=str, required=True,
-                        help="output path to store the tracking results (MOT challenge devkit compatible format)")
+                        help="output path to store the tracking results "
+                             "(MOT challenge devkit compatible format)")
     parser.add_argument('-sl', '--sigma_l', type=float, default=0,
                         help="low detection threshold")
     parser.add_argument('-sh', '--sigma_h', type=float, default=0.5,
