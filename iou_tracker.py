@@ -46,6 +46,7 @@ def track_iou(detections, sigma_l, sigma_h, sigma_iou, t_min):
                     track['bboxes'].append(best_match['bbox'])
                     track['max_score'] = max(track['max_score'],
                                              best_match['score'])
+                    track['label'] = best_match['label']
 
                     updated_tracks.append(track)
 

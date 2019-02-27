@@ -13,6 +13,9 @@ import argparse
 from iou_tracker import track_iou
 from util import load_mot, save_to_csv
 
+# version = ""
+version = "_yolo"
+
 
 def main(args):
     with open(args.seqmap) as fd:
@@ -22,8 +25,8 @@ def main(args):
         if seq == "name" or seq == "":
             continue
         else:
-            det_path = args.benchmark_dir + "/" + seq + "/det/det.txt"
-            out_path = args.res_dir + "/" + seq + ".txt"
+            det_path = args.benchmark_dir + "/" + seq + "/det" + version + "/det.txt"
+            out_path = args.res_dir + "/" + seq + version + ".txt"
 
             detections = load_mot(det_path)
 

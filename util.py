@@ -40,8 +40,9 @@ def load_mot(detections):
         labels = raw[idx, 7]  # extract column 7 for the indexes (idx) from raw
         dets = []
         for bb, s, label in zip(bbox, scores, labels):
-            dets.append({'bbox': (bb[0], bb[1], bb[2], bb[3]), 'score': s,
-                         'label': label})
+            if label == 1:  # only consider pedestrians
+                dets.append({'bbox': (bb[0], bb[1], bb[2], bb[3]), 'score': s,
+                             'label': int(label)})
         data.append(dets)
 
     return data
@@ -57,8 +58,8 @@ def save_to_csv(out_path, tracks):
     """
 
     with open(out_path, "w", newline="") as ofile:
-        field_names = ['frame', 'id', 'x', 'y', 'w', 'h', 'score', 'wx', 'wy',
-                       'wz']
+        field_names = ['frame', 'id', 'x', 'y', 'w', 'h', 'score', 'label',
+                       'wy', 'wz']
 
         odict = csv.DictWriter(ofile, field_names)
         id_ = 1
@@ -71,7 +72,7 @@ def save_to_csv(out_path, tracks):
                        'w': bbox[2] - bbox[0],
                        'h': bbox[3] - bbox[1],
                        'score': track['max_score'],
-                       'wx': -1,
+                       'label': track['label'],
                        'wy': -1,
                        'wz': -1}
 
